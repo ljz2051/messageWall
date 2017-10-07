@@ -1,6 +1,6 @@
 package com.springapp.mvc.controller;
 
-import com.springapp.mvc.commons.Result;
+import com.springapp.mvc.dto.Result;
 import com.springapp.mvc.service.impl.LoginServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -18,7 +18,8 @@ public class LoginController {
 
     @RequestMapping(value = "codeForSessionKey")
     @ResponseBody
-    public String codeForSessionKey(String code, HttpServletRequest request){
+    public Result codeForSessionKey(String code, HttpServletRequest request){
+        Result result = new Result();
         HttpSession session = request.getSession();
         session.setMaxInactiveInterval(10 * 60);
         Result transResult = this.loginService.codeForSessionKey(code);
@@ -26,9 +27,15 @@ public class LoginController {
             Object user = transResult.getObject();
             session.setAttribute(session.getId(), user);
             System.out.println("sessionId" + session.getId());
-            return session.getId();
+            result.setSuccess(true);
+            result.setObject("{\"sessionId\":" + session.getId() + "}");
+            return result;
         }
-        return transResult.getMsg();
+        else{
+            result.setSuccess(false);
+            result.setMsg(transResult.getMsg());
+            return result;
+        }
     }
 
 }

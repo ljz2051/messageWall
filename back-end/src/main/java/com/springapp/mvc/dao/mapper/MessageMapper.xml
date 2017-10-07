@@ -6,7 +6,7 @@
       <idArg column="id" javaType="java.lang.Integer" jdbcType="INTEGER" />
       <arg column="userId" javaType="java.lang.String" jdbcType="VARCHAR" />
       <arg column="likeNum" javaType="java.lang.Integer" jdbcType="INTEGER" />
-      <arg column="anonymous" javaType="java.lang.Short" jdbcType="DECIMAL" />
+      <arg column="anonymous" javaType="java.lang.Short" jdbcType="SMALLINT" />
       <arg column="createTime" javaType="java.util.Date" jdbcType="TIMESTAMP" />
     </constructor>
   </resultMap>
@@ -15,7 +15,7 @@
       <idArg column="id" javaType="java.lang.Integer" jdbcType="INTEGER" />
       <arg column="userId" javaType="java.lang.String" jdbcType="VARCHAR" />
       <arg column="likeNum" javaType="java.lang.Integer" jdbcType="INTEGER" />
-      <arg column="anonymous" javaType="java.lang.Short" jdbcType="DECIMAL" />
+      <arg column="anonymous" javaType="java.lang.Short" jdbcType="SMALLINT" />
       <arg column="createTime" javaType="java.util.Date" jdbcType="TIMESTAMP" />
       <arg column="content" javaType="java.lang.String" jdbcType="LONGVARCHAR" />
     </constructor>
@@ -43,7 +43,7 @@
       anonymous, createTime, content
       )
     values (#{id,jdbcType=INTEGER}, #{userid,jdbcType=VARCHAR}, #{likenum,jdbcType=INTEGER}, 
-      #{anonymous,jdbcType=DECIMAL}, #{createtime,jdbcType=TIMESTAMP}, #{content,jdbcType=LONGVARCHAR}
+      #{anonymous,jdbcType=SMALLINT}, #{createtime,jdbcType=TIMESTAMP}, #{content,jdbcType=LONGVARCHAR}
       )
   </insert>
   <insert id="insertSelective" parameterType="com.springapp.mvc.entity.Message">
@@ -79,7 +79,7 @@
         #{likenum,jdbcType=INTEGER},
       </if>
       <if test="anonymous != null">
-        #{anonymous,jdbcType=DECIMAL},
+        #{anonymous,jdbcType=SMALLINT},
       </if>
       <if test="createtime != null">
         #{createtime,jdbcType=TIMESTAMP},
@@ -99,7 +99,7 @@
         likeNum = #{likenum,jdbcType=INTEGER},
       </if>
       <if test="anonymous != null">
-        anonymous = #{anonymous,jdbcType=DECIMAL},
+        anonymous = #{anonymous,jdbcType=SMALLINT},
       </if>
       <if test="createtime != null">
         createTime = #{createtime,jdbcType=TIMESTAMP},
@@ -114,7 +114,7 @@
     update message
     set userId = #{userid,jdbcType=VARCHAR},
       likeNum = #{likenum,jdbcType=INTEGER},
-      anonymous = #{anonymous,jdbcType=DECIMAL},
+      anonymous = #{anonymous,jdbcType=SMALLINT},
       createTime = #{createtime,jdbcType=TIMESTAMP},
       content = #{content,jdbcType=LONGVARCHAR}
     where id = #{id,jdbcType=INTEGER}
@@ -123,8 +123,34 @@
     update message
     set userId = #{userid,jdbcType=VARCHAR},
       likeNum = #{likenum,jdbcType=INTEGER},
-      anonymous = #{anonymous,jdbcType=DECIMAL},
+      anonymous = #{anonymous,jdbcType=SMALLINT},
       createTime = #{createtime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}
   </update>
+  <select id="selectAllByPage" resultMap="ResultMapWithBLOBs" useCache="true">
+   select
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from message
+    where 1=1
+    <if test="ob.id != null ">
+      AND id = #{ob.id, jdbcType=INTEGER}
+    </if>
+    <if test="ob.userid != null and ob.userid != ''">
+      AND  userId = #{ob.userid, jdbcType=VARCHAR}
+    </if>
+    <if test="ob.likenum != null">
+      AND likeNum = #{ob.likenum, jdbcType=INTEGER}
+    </if>
+    <if test="ob.anonymous != null">
+      AND anonymous = #{ob.anonymous, jdbcType=SMALLINT,}
+    </if>
+    <if test="ob.createtime != null">
+      AND createTime = #{ob.createtime, jdbcType=TIMESTAMP}
+    </if>
+    <if test="ob.content != null and ob.content != ''">
+      AND content = #{ob.content, jdbcType=LONGVARCHAR}
+    </if>
+  </select>
 </mapper>

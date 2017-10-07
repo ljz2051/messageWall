@@ -26,7 +26,24 @@
     <button type="submit">提交</button>
 </form>
 <hr/>
-<>
+<h2>表白墙（分页查询）</h2>
+<form method="post" action="MessageController/showAllByPage">
+    当前页面号（currentPage）:<input name="pageNum" type="text"/>
+    页面大小（pageSize）：<input name="pageSize" type="text"/>
+    排序依据（id,或createTime等）<input name="order" type="text"/>
+    正逆序（asc / desc）<input name="sort" type="text"/>
+    <button type="submit">提交</button>
+</form>
+<hr/>
+<h2>我的表白：</h2>
+<form method="post" action="MessageController/showMineByPage">
+    sessionId : <input name="sessionId" type="text"/>
+    当前页面号（currentPage）:<input name="pageNum" type="text"/>
+    页面大小（pageSize）：<input name="pageSize" type="text"/>
+    排序依据（id,或createTime等）<input name="order" type="text"/>
+    正逆序（asc / desc）<input name="sort" type="text"/>
+    <button type="submit">提交</button>
 
+</form>
 </body>
 </html>

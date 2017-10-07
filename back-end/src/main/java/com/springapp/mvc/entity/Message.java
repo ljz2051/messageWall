@@ -23,6 +23,15 @@ public class Message {
         this.content = content;
     }
 
+    public Message(Integer id, String userid, Integer likenum, Short anonymous, Date createtime, String content) {
+        this.id = id;
+        this.userid = userid;
+        this.likenum = likenum;
+        this.anonymous = anonymous;
+        this.createtime = createtime;
+        this.content = content;
+    }
+
     public Message() {
         super();
     }
@@ -74,4 +83,5 @@ public class Message {
     public void setContent(String content) {
         this.content = content == null ? null : content.trim();
     }
+
 }

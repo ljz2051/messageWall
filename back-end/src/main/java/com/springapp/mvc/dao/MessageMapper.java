@@ -1,7 +1,10 @@
 package com.springapp.mvc.dao;
 
+import com.springapp.mvc.commons.interceptor.mybatis.page.Page;
 import com.springapp.mvc.entity.Message;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 @Repository
 public interface MessageMapper {
@@ -18,4 +21,6 @@ public interface MessageMapper {
     int updateByPrimaryKeyWithBLOBs(Message record);
 
     int updateByPrimaryKey(Message record);
+
+    List<Message> selectAllByPage(Page page);
 }

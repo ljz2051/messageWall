@@ -1,9 +1,8 @@
 package com.springapp.mvc.service.impl;
 
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.springapp.mvc.commons.Result;
+import com.springapp.mvc.dto.Result;
 import com.springapp.mvc.entity.LoginMessage;
 import com.springapp.mvc.entity.User;
 import com.springapp.mvc.service.ILoginService;
