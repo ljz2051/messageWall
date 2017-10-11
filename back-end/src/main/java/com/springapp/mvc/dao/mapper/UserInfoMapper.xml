@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.springapp.mvc.dao.UserInfoMapper" >
+  <resultMap id="BaseResultMap" type="com.springapp.mvc.entity.UserInfo" >
+    <constructor >
+      <idArg column="openId" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="wxNickName" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="wxAvatarUrl" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="backPhotoUrl" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="fakeNickName" jdbcType="VARCHAR" javaType="java.lang.String" />
+    </constructor>
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="com.springapp.mvc.entity.UserInfo" >
+    <constructor >
+      <idArg column="openId" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="wxNickName" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="wxAvatarUrl" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="backPhotoUrl" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="fakeNickName" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="fakeAvatarUrlList" jdbcType="LONGVARCHAR" javaType="java.lang.String" />
+    </constructor>
+  </resultMap>
+  <sql id="Base_Column_List" >
+    openId, wxNickName, wxAvatarUrl, backPhotoUrl, fakeNickName
+  </sql>
+  <sql id="Blob_Column_List" >
+    fakeAvatarUrlList
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from userInfo
+    where openId = #{openid,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from userInfo
+    where openId = #{openid,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.springapp.mvc.entity.UserInfo" >
+    insert into userInfo (openId, wxNickName, wxAvatarUrl, 
+      backPhotoUrl, fakeNickName, fakeAvatarUrlList
+      )
+    values (#{openid,jdbcType=VARCHAR}, #{wxnickname,jdbcType=VARCHAR}, #{wxavatarurl,jdbcType=VARCHAR}, 
+      #{backphotourl,jdbcType=VARCHAR}, #{fakenickname,jdbcType=VARCHAR}, #{fakeavatarurllist,jdbcType=LONGVARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.springapp.mvc.entity.UserInfo" >
+    insert into userInfo
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="openid != null" >
+        openId,
+      </if>
+      <if test="wxnickname != null" >
+        wxNickName,
+      </if>
+      <if test="wxavatarurl != null" >
+        wxAvatarUrl,
+      </if>
+      <if test="backphotourl != null" >
+        backPhotoUrl,
+      </if>
+      <if test="fakenickname != null" >
+        fakeNickName,
+      </if>
+      <if test="fakeavatarurllist != null" >
+        fakeAvatarUrlList,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="openid != null" >
+        #{openid,jdbcType=VARCHAR},
+      </if>
+      <if test="wxnickname != null" >
+        #{wxnickname,jdbcType=VARCHAR},
+      </if>
+      <if test="wxavatarurl != null" >
+        #{wxavatarurl,jdbcType=VARCHAR},
+      </if>
+      <if test="backphotourl != null" >
+        #{backphotourl,jdbcType=VARCHAR},
+      </if>
+      <if test="fakenickname != null" >
+        #{fakenickname,jdbcType=VARCHAR},
+      </if>
+      <if test="fakeavatarurllist != null" >
+        #{fakeavatarurllist,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.springapp.mvc.entity.UserInfo" >
+    update userInfo
+    <set >
+      <if test="wxnickname != null" >
+        wxNickName = #{wxnickname,jdbcType=VARCHAR},
+      </if>
+      <if test="wxavatarurl != null" >
+        wxAvatarUrl = #{wxavatarurl,jdbcType=VARCHAR},
+      </if>
+      <if test="backphotourl != null" >
+        backPhotoUrl = #{backphotourl,jdbcType=VARCHAR},
+      </if>
+      <if test="fakenickname != null" >
+        fakeNickName = #{fakenickname,jdbcType=VARCHAR},
+      </if>
+      <if test="fakeavatarurllist != null" >
+        fakeAvatarUrlList = #{fakeavatarurllist,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where openId = #{openid,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.springapp.mvc.entity.UserInfo" >
+    update userInfo
+    set wxNickName = #{wxnickname,jdbcType=VARCHAR},
+      wxAvatarUrl = #{wxavatarurl,jdbcType=VARCHAR},
+      backPhotoUrl = #{backphotourl,jdbcType=VARCHAR},
+      fakeNickName = #{fakenickname,jdbcType=VARCHAR},
+      fakeAvatarUrlList = #{fakeavatarurllist,jdbcType=LONGVARCHAR}
+    where openId = #{openid,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.springapp.mvc.entity.UserInfo" >
+    update userInfo
+    set wxNickName = #{wxnickname,jdbcType=VARCHAR},
+      wxAvatarUrl = #{wxavatarurl,jdbcType=VARCHAR},
+      backPhotoUrl = #{backphotourl,jdbcType=VARCHAR},
+      fakeNickName = #{fakenickname,jdbcType=VARCHAR}
+    where openId = #{openid,jdbcType=VARCHAR}
+  </update>
+</mapper>

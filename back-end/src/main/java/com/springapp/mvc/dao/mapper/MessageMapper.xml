@@ -1,32 +1,36 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.springapp.mvc.dao.MessageMapper">
-  <resultMap id="BaseResultMap" type="com.springapp.mvc.entity.Message">
-    <constructor>
-      <idArg column="id" javaType="java.lang.Integer" jdbcType="INTEGER" />
-      <arg column="userId" javaType="java.lang.String" jdbcType="VARCHAR" />
-      <arg column="likeNum" javaType="java.lang.Integer" jdbcType="INTEGER" />
-      <arg column="anonymous" javaType="java.lang.Short" jdbcType="SMALLINT" />
-      <arg column="createTime" javaType="java.util.Date" jdbcType="TIMESTAMP" />
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.springapp.mvc.dao.MessageMapper" >
+  <resultMap id="BaseResultMap" type="com.springapp.mvc.entity.Message" >
+    <constructor >
+      <idArg column="id" jdbcType="INTEGER" javaType="java.lang.Integer" />
+      <arg column="userId" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="likeNum" jdbcType="INTEGER" javaType="java.lang.Integer" />
+      <arg column="anonymous" jdbcType="SMALLINT" javaType="java.lang.Short" />
+      <arg column="createTime" jdbcType="TIMESTAMP" javaType="java.util.Date" />
+      <arg column="fakeNickName" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="fakeAvatorUrl" jdbcType="VARCHAR" javaType="java.lang.String" />
     </constructor>
   </resultMap>
-  <resultMap id="ResultMapWithBLOBs" type="com.springapp.mvc.entity.Message">
-    <constructor>
-      <idArg column="id" javaType="java.lang.Integer" jdbcType="INTEGER" />
-      <arg column="userId" javaType="java.lang.String" jdbcType="VARCHAR" />
-      <arg column="likeNum" javaType="java.lang.Integer" jdbcType="INTEGER" />
-      <arg column="anonymous" javaType="java.lang.Short" jdbcType="SMALLINT" />
-      <arg column="createTime" javaType="java.util.Date" jdbcType="TIMESTAMP" />
-      <arg column="content" javaType="java.lang.String" jdbcType="LONGVARCHAR" />
+  <resultMap id="ResultMapWithBLOBs" type="com.springapp.mvc.entity.Message" >
+    <constructor >
+      <idArg column="id" jdbcType="INTEGER" javaType="java.lang.Integer" />
+      <arg column="userId" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="likeNum" jdbcType="INTEGER" javaType="java.lang.Integer" />
+      <arg column="anonymous" jdbcType="SMALLINT" javaType="java.lang.Short" />
+      <arg column="createTime" jdbcType="TIMESTAMP" javaType="java.util.Date" />
+      <arg column="fakeNickName" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="fakeAvatorUrl" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="content" jdbcType="LONGVARCHAR" javaType="java.lang.String" />
     </constructor>
   </resultMap>
-  <sql id="Base_Column_List">
-    id, userId, likeNum, anonymous, createTime
+  <sql id="Base_Column_List" >
+    id, userId, likeNum, anonymous, createTime, fakeNickName, fakeAvatorUrl
   </sql>
-  <sql id="Blob_Column_List">
+  <sql id="Blob_Column_List" >
     content
   </sql>
-  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="ResultMapWithBLOBs">
+  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.Integer" >
     select 
     <include refid="Base_Column_List" />
     ,
@@ -34,106 +38,155 @@
     from message
     where id = #{id,jdbcType=INTEGER}
   </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
     delete from message
     where id = #{id,jdbcType=INTEGER}
   </delete>
-  <insert id="insert" parameterType="com.springapp.mvc.entity.Message">
+  <insert id="insert" parameterType="com.springapp.mvc.entity.Message" >
     insert into message (id, userId, likeNum, 
-      anonymous, createTime, content
-      )
+      anonymous, createTime, fakeNickName, 
+      fakeAvatorUrl, content)
     values (#{id,jdbcType=INTEGER}, #{userid,jdbcType=VARCHAR}, #{likenum,jdbcType=INTEGER}, 
-      #{anonymous,jdbcType=SMALLINT}, #{createtime,jdbcType=TIMESTAMP}, #{content,jdbcType=LONGVARCHAR}
-      )
+      #{anonymous,jdbcType=SMALLINT}, #{createtime,jdbcType=TIMESTAMP}, #{fakenickname,jdbcType=VARCHAR}, 
+      #{fakeavatorurl,jdbcType=VARCHAR}, #{content,jdbcType=LONGVARCHAR})
   </insert>
-  <insert id="insertSelective" parameterType="com.springapp.mvc.entity.Message">
+  <insert id="insertSelective" parameterType="com.springapp.mvc.entity.Message" >
     insert into message
-    <trim prefix="(" suffix=")" suffixOverrides=",">
-      <if test="id != null">
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
         id,
       </if>
-      <if test="userid != null">
+      <if test="userid != null" >
         userId,
       </if>
-      <if test="likenum != null">
+      <if test="likenum != null" >
         likeNum,
       </if>
-      <if test="anonymous != null">
+      <if test="anonymous != null" >
         anonymous,
       </if>
-      <if test="createtime != null">
+      <if test="createtime != null" >
         createTime,
       </if>
-      <if test="content != null">
+      <if test="fakenickname != null" >
+        fakeNickName,
+      </if>
+      <if test="fakeavatorurl != null" >
+        fakeAvatorUrl,
+      </if>
+      <if test="content != null" >
         content,
       </if>
     </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides=",">
-      <if test="id != null">
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
         #{id,jdbcType=INTEGER},
       </if>
-      <if test="userid != null">
+      <if test="userid != null" >
         #{userid,jdbcType=VARCHAR},
       </if>
-      <if test="likenum != null">
+      <if test="likenum != null" >
         #{likenum,jdbcType=INTEGER},
       </if>
-      <if test="anonymous != null">
+      <if test="anonymous != null" >
         #{anonymous,jdbcType=SMALLINT},
       </if>
-      <if test="createtime != null">
+      <if test="createtime != null" >
         #{createtime,jdbcType=TIMESTAMP},
       </if>
-      <if test="content != null">
+      <if test="fakenickname != null" >
+        #{fakenickname,jdbcType=VARCHAR},
+      </if>
+      <if test="fakeavatorurl != null" >
+        #{fakeavatorurl,jdbcType=VARCHAR},
+      </if>
+      <if test="content != null" >
         #{content,jdbcType=LONGVARCHAR},
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.springapp.mvc.entity.Message">
+  <update id="updateByPrimaryKeySelective" parameterType="com.springapp.mvc.entity.Message" >
     update message
-    <set>
-      <if test="userid != null">
+    <set >
+      <if test="userid != null" >
         userId = #{userid,jdbcType=VARCHAR},
       </if>
-      <if test="likenum != null">
+      <if test="likenum != null" >
         likeNum = #{likenum,jdbcType=INTEGER},
       </if>
-      <if test="anonymous != null">
+      <if test="anonymous != null" >
         anonymous = #{anonymous,jdbcType=SMALLINT},
       </if>
-      <if test="createtime != null">
+      <if test="createtime != null" >
         createTime = #{createtime,jdbcType=TIMESTAMP},
       </if>
-      <if test="content != null">
+      <if test="fakenickname != null" >
+        fakeNickName = #{fakenickname,jdbcType=VARCHAR},
+      </if>
+      <if test="fakeavatorurl != null" >
+        fakeAvatorUrl = #{fakeavatorurl,jdbcType=VARCHAR},
+      </if>
+      <if test="content != null" >
         content = #{content,jdbcType=LONGVARCHAR},
       </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
-  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.springapp.mvc.entity.Message">
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.springapp.mvc.entity.Message" >
     update message
     set userId = #{userid,jdbcType=VARCHAR},
       likeNum = #{likenum,jdbcType=INTEGER},
       anonymous = #{anonymous,jdbcType=SMALLINT},
       createTime = #{createtime,jdbcType=TIMESTAMP},
+      fakeNickName = #{fakenickname,jdbcType=VARCHAR},
+      fakeAvatorUrl = #{fakeavatorurl,jdbcType=VARCHAR},
       content = #{content,jdbcType=LONGVARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.springapp.mvc.entity.Message">
+  <update id="updateByPrimaryKey" parameterType="com.springapp.mvc.entity.Message" >
     update message
     set userId = #{userid,jdbcType=VARCHAR},
       likeNum = #{likenum,jdbcType=INTEGER},
       anonymous = #{anonymous,jdbcType=SMALLINT},
-      createTime = #{createtime,jdbcType=TIMESTAMP}
+      createTime = #{createtime,jdbcType=TIMESTAMP},
+      fakeNickName = #{fakenickname,jdbcType=VARCHAR},
+      fakeAvatorUrl = #{fakeavatorurl,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>
   <select id="selectAllByPage" resultMap="ResultMapWithBLOBs" useCache="true">
-   select
+    select
     <include refid="Base_Column_List" />
     ,
     <include refid="Blob_Column_List" />
     from message
     where 1=1
+    <if test="ob.id != null ">
+      AND id = #{ob.id, jdbcType=INTEGER}
+    </if>
+    <if test="ob.userid != null and ob.userid != ''">
+      AND  userId = #{ob.userid, jdbcType=VARCHAR}
+    </if>
+    <if test="ob.likenum != null">
+      AND likeNum = #{ob.likenum, jdbcType=INTEGER}
+    </if>
+    <if test="ob.anonymous != null">
+      AND anonymous = #{ob.anonymous, jdbcType=SMALLINT,}
+    </if>
+    <if test="ob.createtime != null">
+      AND createTime = #{ob.createtime, jdbcType=TIMESTAMP}
+    </if>
+    <if test="ob.content != null and ob.content != ''">
+      AND content = #{ob.content, jdbcType=LONGVARCHAR}
+    </if>
+  </select>
+  <select id="selectInAWeekByPage" resultMap="ResultMapWithBLOBs" useCache="true">
+    select
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from message
+    where year(createTime) = year(now())
+      AND week(createTime,3) = week(now(), 3)
     <if test="ob.id != null ">
       AND id = #{ob.id, jdbcType=INTEGER}
     </if>

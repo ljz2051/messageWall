@@ -2,12 +2,16 @@ package com.springapp.mvc.service.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.springapp.mvc.dao.UserInfoMapper;
 import com.springapp.mvc.dto.Result;
 import com.springapp.mvc.entity.LoginMessage;
 import com.springapp.mvc.entity.User;
+import com.springapp.mvc.entity.UserInfo;
 import com.springapp.mvc.service.ILoginService;
+import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import javax.net.ssl.HttpsURLConnection;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -17,7 +21,10 @@ import java.net.URL;
 
 @Service
 public class LoginServiceImpl implements ILoginService{
-    /*
+
+    @Resource
+    UserInfoMapper userInfoMapper;
+    /**
     **code 换取 session_key
      */
     public Result codeForSessionKey(String code){
@@ -49,8 +56,16 @@ public class LoginServiceImpl implements ILoginService{
             System.out.println(sb.toString());
             JSONObject response = JSON.parseObject(sb.toString());
              if(response.containsKey("openid")){
-                 user.setOpenid((String)response.get("openid"));
-                 user.setSessionKey((String)response.get("session_key"));
+                 user.setOpenid(response.getString("openid"));
+                 user.setSessionKey(response.getString("session_key"));
+                 user.setExpiresIn(response.getIntValue("expires_in"));
+
+                 UserInfo userInfo = userInfoMapper.selectByPrimaryKey(user.getOpenid());
+                 if(userInfo == null){
+                     UserInfo insertUserInfo = new UserInfo(user.getOpenid());
+                     this.userInfoMapper.insertSelective(insertUserInfo);
+                 }
+
                  result.setSuccess(true);
                  result.setObject(user);
                  return result;
@@ -61,24 +76,35 @@ public class LoginServiceImpl implements ILoginService{
                  return result;
              }
 
-        }
-        catch (MalformedURLException e){
+        } catch (MalformedURLException e){
             e.printStackTrace();
             result.setSuccess(false);
             result.setMsg("MalformedURLException");
             return result;
-        }
-        catch (IOException e){
+        } catch (IOException e){
             e.printStackTrace();
             result.setSuccess(false);
             result.setMsg("IOException");
             return result;
-        }
-        catch (Exception e){
+        } catch (Exception e){
             e.printStackTrace();
             result.setSuccess(false);
             return result;
         }
+    }
+
+    //利用rawData,sessionKey,signature校验用户信息的正确性
+    public boolean checkUserInfo(String sessionKey, String rawData, String signature){
+        String signature2 = DigestUtils.sha1Hex(rawData + sessionKey);
+        return signature.equals(signature);
+    }
+
+    //储存昵称和头像url
+    public void storeNickNameAndAnatar(String openid, String nickName, String avatarUrl) throws Exception{
+        UserInfo userInfo = new UserInfo(openid);
+        userInfo.setWxnickname(nickName);
+        userInfo.setWxavatarurl(avatarUrl);
+        this.userInfoMapper.updateByPrimaryKeySelective(userInfo);
     }
 
 

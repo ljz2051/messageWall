@@ -23,4 +23,6 @@ public interface MessageMapper {
     int updateByPrimaryKey(Message record);
 
     List<Message> selectAllByPage(Page page);
+
+    List<Message> selectInAWeekByPage(Page page);
 }

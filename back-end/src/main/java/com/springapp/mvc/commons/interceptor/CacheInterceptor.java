@@ -43,7 +43,7 @@ public class CacheInterceptor implements Interceptor {
     private static String defaultPageSqlId = ".*Page$"; // 需要拦截的ID(正则匹配)
     private static String pageSqlId = ""; // 需要拦截的ID(正则匹配)
 
-    @Override
+
     public Object intercept(Invocation invocation) throws Throwable {
         Executor executorProxy = (Executor) invocation.getTarget();
         MetaObject metaExecutor = MetaObject.forObject(executorProxy, DEFAULT_OBJECT_FACTORY, DEFAULT_OBJECT_WRAPPER_FACTORY);
@@ -134,7 +134,6 @@ public class CacheInterceptor implements Interceptor {
     /**
      * 只拦截CachingExecutor，其他的直接返回目标本身
      */
-    @Override
     public Object plugin(Object target) {
         if (target instanceof CachingExecutor) {
             return Plugin.wrap(target, this);
@@ -143,7 +142,6 @@ public class CacheInterceptor implements Interceptor {
         }
     }
 
-    @Override
     public void setProperties(Properties properties) {
 
     }

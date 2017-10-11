@@ -13,22 +13,20 @@ public class Message {
 
     private Date createtime;
 
+    private String fakenickname;
+
+    private String fakeavatorurl;
+
     private String content;
 
-    public Message(String userid, Integer likenum, Short anonymous, Date createtime, String content) {
-        this.userid = userid;
-        this.likenum = likenum;
-        this.anonymous = anonymous;
-        this.createtime = createtime;
-        this.content = content;
-    }
-
-    public Message(Integer id, String userid, Integer likenum, Short anonymous, Date createtime, String content) {
+    public Message(Integer id, String userid, Integer likenum, Short anonymous, Date createtime, String fakenickname, String fakeavatorurl, String content) {
         this.id = id;
         this.userid = userid;
         this.likenum = likenum;
         this.anonymous = anonymous;
         this.createtime = createtime;
+        this.fakenickname = fakenickname;
+        this.fakeavatorurl = fakeavatorurl;
         this.content = content;
     }
 
@@ -76,6 +74,22 @@ public class Message {
         this.createtime = createtime;
     }
 
+    public String getFakenickname() {
+        return fakenickname;
+    }
+
+    public void setFakenickname(String fakenickname) {
+        this.fakenickname = fakenickname == null ? null : fakenickname.trim();
+    }
+
+    public String getFakeavatorurl() {
+        return fakeavatorurl;
+    }
+
+    public void setFakeavatorurl(String fakeavatorurl) {
+        this.fakeavatorurl = fakeavatorurl == null ? null : fakeavatorurl.trim();
+    }
+
     public String getContent() {
         return content;
     }
@@ -83,5 +97,4 @@ public class Message {
     public void setContent(String content) {
         this.content = content == null ? null : content.trim();
     }
-
 }

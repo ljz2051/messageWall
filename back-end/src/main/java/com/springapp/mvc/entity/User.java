@@ -1,10 +1,19 @@
 package com.springapp.mvc.entity;
 
+//code 换取的用户信息
 public class User {
     private String openid;
     private String sessionKey;
     private String unionid;
-    private String session;
+    private int expiresIn;
+
+    public int getExpiresIn() {
+        return expiresIn;
+    }
+
+    public void setExpiresIn(int expiresIn) {
+        this.expiresIn = expiresIn;
+    }
 
     public String getOpenid() {
         return openid;
@@ -28,13 +37,5 @@ public class User {
 
     public void setUnionid(String unionid) {
         this.unionid = unionid;
-    }
-
-    public String getSession() {
-        return session;
-    }
-
-    public void setSession(String session) {
-        this.session = session;
     }
 }
