@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -24,7 +25,7 @@ public class LoginController {
 
     @RequestMapping(value = "codeForSessionKey")
     @ResponseBody
-    public Result codeForSessionKey(String code, HttpServletRequest request){
+    public Result codeForSessionKey(String code, HttpServletRequest request)throws Exception{
         Result result = new Result();
         String sessionId = request.getSession().getId();
         Result transResult = this.iLoginService.codeForSessionKey(code);
@@ -34,12 +35,11 @@ public class LoginController {
                 Map<String, String> infoMap = new HashMap<String, String>();
                 infoMap.put("openid",user.getOpenid());
                 infoMap.put("session_key", user.getSessionKey());
-                System.out.println(infoMap);
                 this.iJedisService.setAttrInJedis(sessionId, infoMap, user.getExpiresIn());
-                System.out.println("sessionId#" + sessionId);
                 result.setSuccess(true);
                 Map<String, String> object = new HashMap<String, String>();
                 object.put("sessionId", sessionId);
+                object.put("userId", String.valueOf(user.getId()));
                 result.setObject(object);
                 return result;
 
@@ -64,7 +64,7 @@ public class LoginController {
         Result result = new Result();
         try {
             Map<String, String> infoMap = this.iJedisService.getAttrFromJedis(sessionId);
-            if(infoMap == null){
+            if(infoMap == null || infoMap.size() == 0){
                 result.setSuccess(false);
                 result.setMsg("用户未登录或session过期");
                 return result;

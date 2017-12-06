@@ -3,7 +3,8 @@
 <mapper namespace="com.springapp.mvc.dao.UserInfoMapper" >
   <resultMap id="BaseResultMap" type="com.springapp.mvc.entity.UserInfo" >
     <constructor >
-      <idArg column="openId" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <idArg column="id" jdbcType="INTEGER" javaType="java.lang.Integer" />
+      <arg column="openId" jdbcType="VARCHAR" javaType="java.lang.String" />
       <arg column="wxNickName" jdbcType="VARCHAR" javaType="java.lang.String" />
       <arg column="wxAvatarUrl" jdbcType="VARCHAR" javaType="java.lang.String" />
       <arg column="backPhotoUrl" jdbcType="VARCHAR" javaType="java.lang.String" />
@@ -12,7 +13,8 @@
   </resultMap>
   <resultMap id="ResultMapWithBLOBs" type="com.springapp.mvc.entity.UserInfo" >
     <constructor >
-      <idArg column="openId" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <idArg column="id" jdbcType="INTEGER" javaType="java.lang.Integer" />
+      <arg column="openId" jdbcType="VARCHAR" javaType="java.lang.String" />
       <arg column="wxNickName" jdbcType="VARCHAR" javaType="java.lang.String" />
       <arg column="wxAvatarUrl" jdbcType="VARCHAR" javaType="java.lang.String" />
       <arg column="backPhotoUrl" jdbcType="VARCHAR" javaType="java.lang.String" />
@@ -21,34 +23,45 @@
     </constructor>
   </resultMap>
   <sql id="Base_Column_List" >
-    openId, wxNickName, wxAvatarUrl, backPhotoUrl, fakeNickName
+    id, openId, wxNickName, wxAvatarUrl, backPhotoUrl, fakeNickName
   </sql>
   <sql id="Blob_Column_List" >
     fakeAvatarUrlList
   </sql>
-  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.String" >
+  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.Integer" >
     select 
     <include refid="Base_Column_List" />
     ,
     <include refid="Blob_Column_List" />
     from userInfo
-    where openId = #{openid,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
   </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+  <select id="selectByOpenId" resultMap="ResultMapWithBLOBs" parameterType="java.lang.String">
+    select
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from userInfo
+    where openId = #{openId, jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
     delete from userInfo
-    where openId = #{openid,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
   </delete>
   <insert id="insert" parameterType="com.springapp.mvc.entity.UserInfo" >
-    insert into userInfo (openId, wxNickName, wxAvatarUrl, 
-      backPhotoUrl, fakeNickName, fakeAvatarUrlList
-      )
-    values (#{openid,jdbcType=VARCHAR}, #{wxnickname,jdbcType=VARCHAR}, #{wxavatarurl,jdbcType=VARCHAR}, 
-      #{backphotourl,jdbcType=VARCHAR}, #{fakenickname,jdbcType=VARCHAR}, #{fakeavatarurllist,jdbcType=LONGVARCHAR}
-      )
+    insert into userInfo (id, openId, wxNickName, 
+      wxAvatarUrl, backPhotoUrl, fakeNickName, 
+      fakeAvatarUrlList)
+    values (#{id,jdbcType=INTEGER}, #{openid,jdbcType=VARCHAR}, #{wxnickname,jdbcType=VARCHAR}, 
+      #{wxavatarurl,jdbcType=VARCHAR}, #{backphotourl,jdbcType=VARCHAR}, #{fakenickname,jdbcType=VARCHAR}, 
+      #{fakeavatarurllist,jdbcType=LONGVARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.springapp.mvc.entity.UserInfo" >
     insert into userInfo
     <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
       <if test="openid != null" >
         openId,
       </if>
@@ -69,6 +82,9 @@
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
       <if test="openid != null" >
         #{openid,jdbcType=VARCHAR},
       </if>
@@ -92,6 +108,9 @@
   <update id="updateByPrimaryKeySelective" parameterType="com.springapp.mvc.entity.UserInfo" >
     update userInfo
     <set >
+      <if test="openid != null" >
+        openId = #{openid,jdbcType=VARCHAR},
+      </if>
       <if test="wxnickname != null" >
         wxNickName = #{wxnickname,jdbcType=VARCHAR},
       </if>
@@ -108,23 +127,49 @@
         fakeAvatarUrlList = #{fakeavatarurllist,jdbcType=LONGVARCHAR},
       </if>
     </set>
-    where openId = #{openid,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByOpenIdSelective" parameterType="com.springapp.mvc.entity.UserInfo" >
+    update userInfo
+    <set >
+     <!-- <if test="openid != null" >
+        openId = #{openid,jdbcType=VARCHAR},
+      </if>-->
+      <if test="wxnickname != null" >
+        wxNickName = #{wxnickname,jdbcType=VARCHAR},
+      </if>
+      <if test="wxavatarurl != null" >
+        wxAvatarUrl = #{wxavatarurl,jdbcType=VARCHAR},
+      </if>
+      <if test="backphotourl != null" >
+        backPhotoUrl = #{backphotourl,jdbcType=VARCHAR},
+      </if>
+      <if test="fakenickname != null" >
+        fakeNickName = #{fakenickname,jdbcType=VARCHAR},
+      </if>
+      <if test="fakeavatarurllist != null" >
+        fakeAvatarUrlList = #{fakeavatarurllist,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where openId = #{openid,jdbcType=INTEGER}
   </update>
   <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.springapp.mvc.entity.UserInfo" >
     update userInfo
-    set wxNickName = #{wxnickname,jdbcType=VARCHAR},
-      wxAvatarUrl = #{wxavatarurl,jdbcType=VARCHAR},
-      backPhotoUrl = #{backphotourl,jdbcType=VARCHAR},
-      fakeNickName = #{fakenickname,jdbcType=VARCHAR},
-      fakeAvatarUrlList = #{fakeavatarurllist,jdbcType=LONGVARCHAR}
-    where openId = #{openid,jdbcType=VARCHAR}
+    set openId = #{openid,jdbcType=VARCHAR},
+    wxNickName = #{wxnickname,jdbcType=VARCHAR},
+    wxAvatarUrl = #{wxavatarurl,jdbcType=VARCHAR},
+    backPhotoUrl = #{backphotourl,jdbcType=VARCHAR},
+    fakeNickName = #{fakenickname,jdbcType=VARCHAR},
+    fakeAvatarUrlList = #{fakeavatarurllist,jdbcType=LONGVARCHAR}
+    where id = #{id,jdbcType=INTEGER}
   </update>
   <update id="updateByPrimaryKey" parameterType="com.springapp.mvc.entity.UserInfo" >
     update userInfo
-    set wxNickName = #{wxnickname,jdbcType=VARCHAR},
+    set openId = #{openid,jdbcType=VARCHAR},
+      wxNickName = #{wxnickname,jdbcType=VARCHAR},
       wxAvatarUrl = #{wxavatarurl,jdbcType=VARCHAR},
       backPhotoUrl = #{backphotourl,jdbcType=VARCHAR},
       fakeNickName = #{fakenickname,jdbcType=VARCHAR}
-    where openId = #{openid,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
   </update>
 </mapper>

@@ -1,6 +1,8 @@
 package com.springapp.mvc.entity;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 public class Message {
     private Integer id;
@@ -19,7 +21,32 @@ public class Message {
 
     private String content;
 
-    public Message(Integer id, String userid, Integer likenum, Short anonymous, Date createtime, String fakenickname, String fakeavatorurl, String content) {
+    private List<Integer> likeUserList;
+
+    public List<Integer> getLikeUserList() {
+        return likeUserList;
+    }
+
+    /*public void setLikeUserList(List<Integer> likeUserList) {
+        this.likeUserList = likeUserList;
+    }*/
+
+    public void addUserInLikeUserList(Integer id){
+        if(this.likeUserList == null){
+            this.likeUserList = new ArrayList<Integer>();
+        }
+        this.likeUserList.add(id);
+    }
+
+    public boolean deleteUserInLikeUserList(Integer id){
+        boolean result = false;
+        if(this.likeUserList != null){
+            result = this.likeUserList.remove(id);
+        }
+        return result;
+    }
+
+    public Message(Integer id, String userid, Integer likenum, Short anonymous, Date createtime, String fakenickname, String fakeavatorurl, String content, List<Integer> likeUserList) {
         this.id = id;
         this.userid = userid;
         this.likenum = likenum;
@@ -28,6 +55,7 @@ public class Message {
         this.fakenickname = fakenickname;
         this.fakeavatorurl = fakeavatorurl;
         this.content = content;
+        this.likeUserList = likeUserList;
     }
 
     public Message() {

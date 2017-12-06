@@ -27,6 +27,12 @@
         <setting name="lazyLoadTriggerMethods" value="equals,clone,hashCode,toString"/>
     </settings>
 
+    <typeHandlers>
+        <!--<package name=""/>-->
+        <typeHandler handler="com.springapp.mvc.commons.typehandler.MyListTypeHandler"/>
+    </typeHandlers>
+
+
     <plugins>
         <plugin interceptor="com.springapp.mvc.commons.interceptor.PageInterceptor">
             <property name="dialect" value="mysql" />

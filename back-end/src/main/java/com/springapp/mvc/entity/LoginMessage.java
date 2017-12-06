@@ -1,14 +1,13 @@
 package com.springapp.mvc.entity;
 
 public class LoginMessage {
-    private String appId;
-    private String secret;
+    public static final String appId = "wx08f5b41f4053f382";
+    public static final String secret = "e8baac904b89a1ce3cbb4a42f1660b53";
     private String jsCode;
     private String grantType;
 
+    //https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=wx08f5b41f4053f382&secret=e8baac904b89a1ce3cbb4a42f1660b53
     public LoginMessage(String code){
-        this.appId = 	"wx08f5b41f4053f382";
-        this.secret = "e8baac904b89a1ce3cbb4a42f1660b53";
         this.jsCode = code;
         this.grantType = "authorization_code";
     }
@@ -17,16 +16,8 @@ public class LoginMessage {
         return appId;
     }
 
-    public void setAppId(String appId) {
-        this.appId = appId;
-    }
-
     public String getSecret() {
         return secret;
-    }
-
-    public void setSecret(String secret) {
-        this.secret = secret;
     }
 
     public String getJsCode() {
@@ -45,3 +36,4 @@ public class LoginMessage {
         this.grantType = grantType;
     }
 }
+//https://api.weixin.qq.com/wxa/getwxacode?access_token=JmUeVYVR6soQ1nzhQ9fYDZAhPR4yU8sChCI6HVMmeo-RWvrtp5dAhLxQtkXw5bGVRMqVBPRzRQ57w9Xcj5HDER3CqK3TxCxIq0q4RewNVthivp1jvYQUvmR3uuAN8DxTBFDbAEAIMK

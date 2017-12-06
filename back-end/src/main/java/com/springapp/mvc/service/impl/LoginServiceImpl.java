@@ -33,7 +33,7 @@ public class LoginServiceImpl implements ILoginService{
         String urlString = "https://api.weixin.qq.com/sns/jscode2session?appid=" + loginMessage.getAppId() +
                 "&secret=" + loginMessage.getSecret() + "&js_code=" + loginMessage.getJsCode() +
                 "&grant_type=" + loginMessage.getGrantType();
-        System.out.println(urlString);
+        //System.out.println(urlString);
         try{
             URL url = new URL(urlString);
             HttpsURLConnection conn = (HttpsURLConnection)url.openConnection();
@@ -53,19 +53,21 @@ public class LoginServiceImpl implements ILoginService{
             //正常返回的JSON数据包{"openid": "OPENID",   "session_key": "SESSIONKEY", "unionid": "UNIONID"}
             //错误时返回JSON数据包(示例为Code无效){"errcode": 40029,"errmsg": "invalid code"}
             User user = new User();
-            System.out.println(sb.toString());
+            //System.out.println(sb.toString());
             JSONObject response = JSON.parseObject(sb.toString());
              if(response.containsKey("openid")){
                  user.setOpenid(response.getString("openid"));
                  user.setSessionKey(response.getString("session_key"));
                  user.setExpiresIn(response.getIntValue("expires_in"));
 
-                 UserInfo userInfo = userInfoMapper.selectByPrimaryKey(user.getOpenid());
+                 UserInfo userInfo = userInfoMapper.selectByOpenId(user.getOpenid());
                  if(userInfo == null){
                      UserInfo insertUserInfo = new UserInfo(user.getOpenid());
                      this.userInfoMapper.insertSelective(insertUserInfo);
+                     user.setId(insertUserInfo.getId());
+                 }else{
+                     user.setId(userInfo.getId());
                  }
-
                  result.setSuccess(true);
                  result.setObject(user);
                  return result;

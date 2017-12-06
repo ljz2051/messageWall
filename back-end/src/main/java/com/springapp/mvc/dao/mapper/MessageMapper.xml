@@ -10,22 +10,24 @@
       <arg column="createTime" jdbcType="TIMESTAMP" javaType="java.util.Date" />
       <arg column="fakeNickName" jdbcType="VARCHAR" javaType="java.lang.String" />
       <arg column="fakeAvatorUrl" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="likeUserList" typeHandler="com.springapp.mvc.commons.typehandler.MyListTypeHandler" jdbcType="VARCHAR" javaType="java.util.List" />
     </constructor>
   </resultMap>
   <resultMap id="ResultMapWithBLOBs" type="com.springapp.mvc.entity.Message" >
     <constructor >
-      <idArg column="id" jdbcType="INTEGER" javaType="java.lang.Integer" />
-      <arg column="userId" jdbcType="VARCHAR" javaType="java.lang.String" />
-      <arg column="likeNum" jdbcType="INTEGER" javaType="java.lang.Integer" />
-      <arg column="anonymous" jdbcType="SMALLINT" javaType="java.lang.Short" />
-      <arg column="createTime" jdbcType="TIMESTAMP" javaType="java.util.Date" />
-      <arg column="fakeNickName" jdbcType="VARCHAR" javaType="java.lang.String" />
-      <arg column="fakeAvatorUrl" jdbcType="VARCHAR" javaType="java.lang.String" />
-      <arg column="content" jdbcType="LONGVARCHAR" javaType="java.lang.String" />
+        <idArg column="id" jdbcType="INTEGER" javaType="java.lang.Integer" />
+        <arg column="userId" jdbcType="VARCHAR" javaType="java.lang.String" />
+        <arg column="likeNum" jdbcType="INTEGER" javaType="java.lang.Integer" />
+        <arg column="anonymous" jdbcType="SMALLINT" javaType="java.lang.Short" />
+        <arg column="createTime" jdbcType="TIMESTAMP" javaType="java.util.Date" />
+        <arg column="fakeNickName" jdbcType="VARCHAR" javaType="java.lang.String" />
+        <arg column="fakeAvatorUrl" jdbcType="VARCHAR" javaType="java.lang.String" />
+        <arg column="content" jdbcType="LONGVARCHAR" javaType="java.lang.String" />
+        <arg column="likeUserList" typeHandler="com.springapp.mvc.commons.typehandler.MyListTypeHandler" jdbcType="VARCHAR" javaType="java.util.List" />
     </constructor>
   </resultMap>
   <sql id="Base_Column_List" >
-    id, userId, likeNum, anonymous, createTime, fakeNickName, fakeAvatorUrl
+    id, userId, likeNum, anonymous, createTime, fakeNickName, fakeAvatorUrl,likeUserList
   </sql>
   <sql id="Blob_Column_List" >
     content
@@ -45,10 +47,11 @@
   <insert id="insert" parameterType="com.springapp.mvc.entity.Message" >
     insert into message (id, userId, likeNum, 
       anonymous, createTime, fakeNickName, 
-      fakeAvatorUrl, content)
+      fakeAvatorUrl, likeUserList, content)
     values (#{id,jdbcType=INTEGER}, #{userid,jdbcType=VARCHAR}, #{likenum,jdbcType=INTEGER}, 
       #{anonymous,jdbcType=SMALLINT}, #{createtime,jdbcType=TIMESTAMP}, #{fakenickname,jdbcType=VARCHAR}, 
-      #{fakeavatorurl,jdbcType=VARCHAR}, #{content,jdbcType=LONGVARCHAR})
+      #{fakeavatorurl,jdbcType=VARCHAR},#{likeUserList, jdbcType=VARCHAR, typeHandler=com.springapp.mvc.commons.typehandler.MyListTypeHandler},
+      #{content,jdbcType=LONGVARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.springapp.mvc.entity.Message" >
     insert into message
@@ -73,6 +76,9 @@
       </if>
       <if test="fakeavatorurl != null" >
         fakeAvatorUrl,
+      </if>
+      <if test="likeUserList != null">
+          likeUserList,
       </if>
       <if test="content != null" >
         content,
@@ -100,6 +106,9 @@
       <if test="fakeavatorurl != null" >
         #{fakeavatorurl,jdbcType=VARCHAR},
       </if>
+        <if test="likeUserList != null">
+            #{likeUserList, jdbcType=VARCHAR, typeHandler=com.springapp.mvc.commons.typehandler.MyListTypeHandler},
+        </if>
       <if test="content != null" >
         #{content,jdbcType=LONGVARCHAR},
       </if>
@@ -126,6 +135,9 @@
       <if test="fakeavatorurl != null" >
         fakeAvatorUrl = #{fakeavatorurl,jdbcType=VARCHAR},
       </if>
+      <if test="likeUserList != null and likeUserList != ''">
+        likeUserList = #{likeUserList, jdbcType=VARCHAR, javaType=java.util.List,typeHandler=com.springapp.mvc.commons.typehandler.MyListTypeHandler},
+      </if>
       <if test="content != null" >
         content = #{content,jdbcType=LONGVARCHAR},
       </if>
@@ -140,6 +152,7 @@
       createTime = #{createtime,jdbcType=TIMESTAMP},
       fakeNickName = #{fakenickname,jdbcType=VARCHAR},
       fakeAvatorUrl = #{fakeavatorurl,jdbcType=VARCHAR},
+      likeUserList = #{likeUserList, jdbcType=VARCHAR, typeHandler=com.springapp.mvc.commons.typehandler.MyListTypeHandler},
       content = #{content,jdbcType=LONGVARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>
@@ -150,7 +163,8 @@
       anonymous = #{anonymous,jdbcType=SMALLINT},
       createTime = #{createtime,jdbcType=TIMESTAMP},
       fakeNickName = #{fakenickname,jdbcType=VARCHAR},
-      fakeAvatorUrl = #{fakeavatorurl,jdbcType=VARCHAR}
+      fakeAvatorUrl = #{fakeavatorurl,jdbcType=VARCHAR},
+      likeUserList = #{likeUserList, jdbcType=VARCHAR, typeHandler=com.springapp.mvc.commons.typehandler.MyListTypeHandler}
     where id = #{id,jdbcType=INTEGER}
   </update>
   <select id="selectAllByPage" resultMap="ResultMapWithBLOBs" useCache="true">
@@ -179,7 +193,7 @@
       AND content = #{ob.content, jdbcType=LONGVARCHAR}
     </if>
   </select>
-  <select id="selectInAWeekByPage" resultMap="ResultMapWithBLOBs" useCache="true">
+  <select id="selectInAWeekByPage" resultMap="ResultMapWithBLOBs">
     select
     <include refid="Base_Column_List" />
     ,

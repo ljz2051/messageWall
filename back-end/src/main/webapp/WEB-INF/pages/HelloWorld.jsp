@@ -12,7 +12,7 @@
 </head>
 <body>
 <h2>公共接口：</h2>
-<p>1. 登录:（小程序中调用wx.login 返回code，将code发送到后端换取sessionId,需将sessionId保存在本地）</p>
+<p>1. 登录:（小程序中调用wx.login 返回code，将code发送到后端换取sessionId,需将sessionId和userId保存在本地）</p>
 <br/>
 <form method="post" action="LoginController/codeForSessionKey">
     <label>code: </label>
@@ -30,6 +30,8 @@
     signature<input name="signature" type="text"/>
     <button type="submit">提交</button>
 </form>
+<br/>
+<a href="CommonController/getAccessToken">获取access_token</a>
 <hr/>
 
 <h2>个人足迹</h2>
@@ -50,10 +52,11 @@
     sessionId:<input name="sessionId" type="text"/>
     <button type="submit">提交</button>
 </form>
-
+<br/>
 <p>4. 获得用户表白信息：</p>
 <form method="post" action="MyMessageController/showMineByPage">
     sessionId : <input name="sessionId" type="text"/>
+    用户id：<input name="userId" type="text">
     当前页面号（currentPage）:<input name="pageNum" type="text"/>
     页面大小（pageSize）：<input name="pageSize" type="text"/>
     排序依据（id,或createTime等）<input name="order" type="text"/>
@@ -65,25 +68,35 @@
 <p>用户想要发布表白，必须授权获取头像和昵称，若用户登陆时拒绝，此处应再次申请授权，并
     将用户昵称和头像通过接口发送后台服务器，同时存储到globaldata中</p>
 <p>匿名状态下可以选择使用以前上传过的匿名头像，或者上传新的匿名头像</p>
-<p>1. 上传新的匿名头像（小程序逻辑与上传背景照片相似）：</p>
+<%--<p>1. 上传新的匿名头像（小程序逻辑与上传背景照片相似）：</p>
 <form method="post" action="MyMessageController/uploadFakePhoto" enctype="multipart/form-data">
     sessionId:<input type="text" name="sessionId">
     选择文件：<input type="file" name="file"/>
     <button type="submit">提交</button>
-</form>
+</form>--%>
 
-<p>2. 查询以前使用过的匿名头像列表：</p>
+<p>1. 查询以前使用过的匿名头像列表：</p>
 <form method="post" action="MyMessageController/selectAvatarList">
     sessionId:<input type="text" name="sessionId"/>
     <button type="submit">提交</button>
 </form>
-
-<p>3. 发布表白</p>
+<br/>
+<p>2. 发布表白（如果用以前的头像，则通过此接口）</p>
 <form method="post" action="MyMessageController/writeMessage">
     sessionId:<input name="sessionId" type="text"/>
     是否匿名：(1表示匿名，0表示不匿名)<input name="anonymous" type="text"/>
     匿名状态下昵称<input type="text" name="fakeName" />
-    匿名状态下头像url：<input type="text" name="fakeAvatarUrl"/>
+    匿名状态下头像url(形如"/resource/imgs/1ewewqe3214213321.jpg")：<input type="text" name="fakeAvatarUrl"/>
+    表白信息：<textarea name="content" cols="30" rows="5"></textarea>
+    <button type="submit">提交</button>
+</form>
+<br/>
+<p>3. 发布表白（如果用新的匿名头像，则通过此接口）</p>
+<form method="post" action="MyMessageController/writeMessage2" enctype="multipart/form-data">
+    sessionId:<input name="sessionId" type="text"/>
+    是否匿名：(1表示匿名，0表示不匿名)<input name="anonymous" type="text"/>
+    匿名状态下昵称<input type="text" name="fakeName" />
+    匿名状态下头像：选择文件：<input type="file" name="file"/>
     表白信息：<textarea name="content" cols="30" rows="5"></textarea>
     <button type="submit">提交</button>
 </form>
@@ -91,6 +104,7 @@
 <h2>首页（分页查询）</h2>
 <p>1.获取所有用户表白信息(返回结果中，fakenickname和fakeavatorurl在匿名模式下为匿名的昵称和头像，非匿名模式下为真实的昵称和头像)</p>
 <form method="post" action="MessageController/showAllByPage">
+    用户id：<input name="userId" type="text"/>
     当前页面号（currentPage）:<input name="pageNum" type="text"/>
     页面大小（pageSize）：<input name="pageSize" type="text"/>
     排序依据（createTime等）<input name="order" type="text"/>
@@ -101,10 +115,23 @@
 <p>2. 获取本周点赞数topn的表白</p>
 <form method="post" action="MessageController/showTopN">
     n:<input name="topn" type="text"/>
+    用户id：<input name="userId" type="text"/>
     <button type="submit">提交</button>
 </form>
-
+<br/>
+<p>3. 点赞(点赞前必须登录，调用公共接口中的登录接口时，会返回userId，用于此处)</p>
+<form method="post" action="MessageController/like">
+    用户id：<input name="userId" type="text"/>
+    表白信息id：<input name="messageId" type="text"/>
+    <button type="submit">提交</button>
+</form>
+<br/>
+<p>4. 取消点赞（只有点赞后才能取消点赞）</p>
+<form method="post" action="MessageController/cancelLike">
+    用户id：<input name="userId" type="text"/>
+    表白信息id：<input name="messageId" type="text"/>
+    <button type="submit">提交</button>
+</form>
 <hr/>
-
 </body>
 </html>

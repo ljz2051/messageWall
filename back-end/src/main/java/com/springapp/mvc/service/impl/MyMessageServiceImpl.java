@@ -17,6 +17,7 @@ import java.util.UUID;
 
 @Service
 public class MyMessageServiceImpl implements IMyMessageService{
+    private static final String basePath = "http://47.94.146.199:8080";
 
     @Resource
     private UserInfoMapper userInfoMapper;
@@ -34,16 +35,16 @@ public class MyMessageServiceImpl implements IMyMessageService{
         file.transferTo(new File(fileName));
 
         UserInfo userInfo = new UserInfo(openid);
-        String fileRelativeUrl = "/static/img/" + uuid + "." + fileSuffix;
+        String fileRelativeUrl = "/resource/imgs/" + uuid + "." + fileSuffix;
         userInfo.setBackphotourl(fileRelativeUrl);
        // System.out.println("openid:" + openid + "   fileName:" + userInfo.getBackphotourl());
-        this.userInfoMapper.updateByPrimaryKeySelective(userInfo);
+        this.userInfoMapper.updateByOpenIdSelective(userInfo);
         return fileRelativeUrl;
     }
 
     public String selectBackPhoto(String openid) throws Exception{
-        System.out.println("openid:" + openid);
-        UserInfo userInfo  = this.userInfoMapper.selectByPrimaryKey(openid);
+        //System.out.println("openid:" + openid);
+        UserInfo userInfo  = this.userInfoMapper.selectByOpenId(openid);
         return userInfo.getBackphotourl();
     }
 
@@ -60,23 +61,32 @@ public class MyMessageServiceImpl implements IMyMessageService{
         String fileName = dirPath + "/" + uuid + "." + fileSuffix;
         file.transferTo(new File(fileName));
 
-        String fileRelativeUrl = "/static/img/" + uuid + "." + fileSuffix;
-        UserInfo userInfo = this.userInfoMapper.selectByPrimaryKey(openid);
+        String fileRelativeUrl = "/resource/imgs/" + uuid + "." + fileSuffix;
+        UserInfo userInfo = this.userInfoMapper.selectByOpenId(openid);
         String fakeAvatarList = userInfo.getFakeavatarurllist();
         if(fakeAvatarList == null){
             fakeAvatarList = fileRelativeUrl;
         }
         else{
+            String[] list = fakeAvatarList.split(" ");
+            if(list.length >= 20 ){
+                StringBuilder sb = new StringBuilder();
+                for(int i = 1; i < list.length; i++){
+                    sb.append(list[i]);
+                    sb.append(" ");
+                }
+                fakeAvatarList = sb.toString().substring(0, sb.toString().length() - 1);
+            }
             fakeAvatarList = fakeAvatarList + " " + fileRelativeUrl;
         }
         userInfo.setFakeavatarurllist(fakeAvatarList);
         this.userInfoMapper.updateByPrimaryKeySelective(userInfo);
-        return fakeAvatarList;
+        return fileRelativeUrl;
     }
 
     //查询openid对应用户的匿名头像列表
     public List<String>  selectAvatarList(String openid) throws Exception{
-        UserInfo userInfo = this.userInfoMapper.selectByPrimaryKey(openid);
+        UserInfo userInfo = this.userInfoMapper.selectByOpenId(openid);
         String fakeAvatarList = userInfo.getFakeavatarurllist();
         if(fakeAvatarList == null){
             return null;

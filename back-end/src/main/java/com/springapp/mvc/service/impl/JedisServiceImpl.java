@@ -34,8 +34,7 @@ public class JedisServiceImpl implements IJedisService{
         Jedis jedis = null;
         try{
             jedis = jedisPool.getResource();
-            Map<String, String> infoMap = new HashMap<String, String>();
-            infoMap = jedis.hgetAll(sessionId);
+            Map<String, String> infoMap = jedis.hgetAll(sessionId);
             return infoMap;
         } finally {
             if(jedis != null){

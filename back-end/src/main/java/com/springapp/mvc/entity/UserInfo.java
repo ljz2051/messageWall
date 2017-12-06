@@ -1,6 +1,8 @@
 package com.springapp.mvc.entity;
 
 public class UserInfo {
+    private Integer id;
+
     private String openid;
 
     private String wxnickname;
@@ -13,7 +15,8 @@ public class UserInfo {
 
     private String fakeavatarurllist;
 
-    public UserInfo(String openid, String wxnickname, String wxavatarurl, String backphotourl, String fakenickname, String fakeavatarurllist) {
+    public UserInfo(Integer id, String openid, String wxnickname, String wxavatarurl, String backphotourl, String fakenickname, String fakeavatarurllist) {
+        this.id = id;
         this.openid = openid;
         this.wxnickname = wxnickname;
         this.wxavatarurl = wxavatarurl;
@@ -22,12 +25,20 @@ public class UserInfo {
         this.fakeavatarurllist = fakeavatarurllist;
     }
 
+    public UserInfo() {
+        super();
+    }
+
     public UserInfo(String openid){
         this.openid = openid;
     }
 
-    public UserInfo() {
-        super();
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     public String getOpenid() {
